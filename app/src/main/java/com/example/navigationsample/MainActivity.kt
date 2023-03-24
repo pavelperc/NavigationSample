@@ -11,7 +11,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        openTab(0)
+        if (savedInstanceState == null) { // not rotating the screen
+            openTab(0)
+        }
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
