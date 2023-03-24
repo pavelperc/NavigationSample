@@ -2,68 +2,76 @@ package com.example.navigationsample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    lateinit var fragments: List<TabFragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        openTab(0)
 
-        fragments = listOf(
-            getOrCreateTab(0),
-            getOrCreateTab(1),
-            getOrCreateTab(2)
-        )
-
-        supportFragmentManager.commit {
-            replace(R.id.container, fragments[0], getTabTag(0))
-        }
-
-        bottomNavigationView.setOnItemReselectedListener { item ->
+        bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_my_books -> openTab(0)
                 R.id.item_showcase -> openTab(1)
                 R.id.item_profile -> openTab(2)
             }
+            false
         }
     }
 
     private fun openTab(position: Int) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragments[position])
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun getOrCreateTab(position: Int): TabFragment {
-        supportFragmentManager.findFragmentByTag(getTabTag(position)) as? TabFragment
-
-        val fragment = supportFragmentManager.findFragmentByTag(TabFragment.TAG) as? TabFragment
+        val fragment = supportFragmentManager.findFragmentByTag(getTabTag(position)) as? TabFragment
         if (fragment != null) {
-            return fragment
+            supportFragmentManager.commit {
+                replace(R.id.container, fragment, getTabTag(position))
+                addToBackStack(getTabTag(position))
+            }
+            selectTabIcon(position)
+            return
         }
 
-        val newFragment = TabFragment()
+        val newFragment = when (position) {
+            0 -> TabFragment.newInstance(MyBooksFragment.TAG)
+            1 -> TabFragment.newInstance(ShowcaseFragment.TAG)
+            2 -> TabFragment.newInstance(ProfileFragment.TAG)
+            else -> error("unknown position $position")
+        }
         supportFragmentManager.commit {
-            add(newFragment, getTabTag(position))
-            attach(newFragment)
+            replace(R.id.container, newFragment, getTabTag(position))
+            addToBackStack(getTabTag(position))
         }
-        when (position) {
-            0 -> newFragment.setStartNavigation<MyBooksFragment>(MyBooksFragment.TAG)
-            1 -> newFragment.setStartNavigation<ShowcaseFragment>(ShowcaseFragment.TAG)
-            2 -> newFragment.setStartNavigation<ProfileFragment>(ProfileFragment.TAG)
-        }
-
-        return newFragment
+        selectTabIcon(position)
     }
+
+    private fun selectTabIcon(position: Int) {
+        bottomNavigationView.menu.getItem(position).isChecked = true
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = getCurrentTabFragment()
+        if (currentFragment.childFragmentManager.backStackEntryCount > 1) {
+            currentFragment.childFragmentManager.popBackStack()
+            return
+        }
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            val previousEntry = supportFragmentManager
+                .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 2)
+            val previousPosition = getPositionFromTag(previousEntry.name.orEmpty())
+            supportFragmentManager.popBackStack()
+            selectTabIcon(previousPosition)
+            return
+        }
+        finish()
+    }
+
+    private fun getCurrentTabFragment() =
+        supportFragmentManager.findFragmentById(R.id.container) as TabFragment
+
+    private fun getPositionFromTag(tag: String) = tag.split("_")[1].toInt()
 
     private fun getTabTag(position: Int) = "tab_$position"
 }
