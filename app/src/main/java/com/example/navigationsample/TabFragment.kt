@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 
-class TabFragment private constructor(): Fragment(R.layout.fragment_tab) {
+class TabFragment: Fragment(R.layout.fragment_tab) {
     companion object {
         const val TAG = "TabFragment"
 
@@ -31,7 +31,7 @@ class TabFragment private constructor(): Fragment(R.layout.fragment_tab) {
             }
             childFragmentManager.commit {
                 replace(R.id.tabContainer, fragment, startNavigation)
-                addToBackStack(null)
+                addToBackStack(startNavigation)
             }
         }
     }
