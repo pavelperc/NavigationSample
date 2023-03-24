@@ -21,36 +21,28 @@ class MainActivity : AppCompatActivity() {
                 R.id.item_showcase -> openTab(1)
                 R.id.item_profile -> openTab(2)
             }
-            false
+            true
         }
     }
 
     private fun openTab(position: Int) {
-        val fragment = supportFragmentManager.findFragmentByTag(getTabTag(position)) as? TabFragment
-        if (fragment != null) {
-            supportFragmentManager.commit {
-                replace(R.id.container, fragment, getTabTag(position))
-                addToBackStack(getTabTag(position))
-            }
-            selectTabIcon(position)
-            return
-        }
+        val fragment = supportFragmentManager
+            .findFragmentByTag(getTabTag(position)) as? TabFragment
+            ?: createTabFragment(position)
 
-        val newFragment = when (position) {
+        supportFragmentManager.commit {
+            replace(R.id.container, fragment, getTabTag(position))
+            addToBackStack(getTabTag(position))
+        }
+    }
+
+    private fun createTabFragment(position: Int): TabFragment {
+        return when (position) {
             0 -> TabFragment.newInstance(MyBooksFragment.TAG)
             1 -> TabFragment.newInstance(ShowcaseFragment.TAG)
             2 -> TabFragment.newInstance(ProfileFragment.TAG)
             else -> error("unknown position $position")
         }
-        supportFragmentManager.commit {
-            replace(R.id.container, newFragment, getTabTag(position))
-            addToBackStack(getTabTag(position))
-        }
-        selectTabIcon(position)
-    }
-
-    private fun selectTabIcon(position: Int) {
-        bottomNavigationView.menu.getItem(position).isChecked = true
     }
 
     override fun onBackPressed() {
@@ -68,6 +60,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
         finish()
+    }
+
+    private fun selectTabIcon(position: Int) {
+        bottomNavigationView.menu.getItem(position).isChecked = true
     }
 
     private fun getCurrentTabFragment() =
