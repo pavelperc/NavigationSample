@@ -14,7 +14,7 @@ class MyBooksFragment: Fragment(R.layout.fragment_my_books) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
-                replace(R.id.tabContainer, BookFragment.newInstance(1))
+                add(R.id.tabContainer, BookFragment.newInstance(1))
                 addToBackStack(BookFragment.TAG)
             }
         }
