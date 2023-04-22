@@ -1,11 +1,13 @@
 package com.example.navigationsample
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.fragment_book.*
+import kotlin.random.Random
 
 class BookFragment : Fragment(R.layout.fragment_book) {
     companion object {
@@ -21,11 +23,21 @@ class BookFragment : Fragment(R.layout.fragment_book) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
         textViewTitle.text = "Книга $number"
+        rootLayout.setBackgroundColor(generateColor(number))
         buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
                 replace(R.id.tabContainer, BookFragment.newInstance(number + 1))
                 addToBackStack(BookFragment.TAG)
             }
         }
+    }
+
+    private fun generateColor(number: Int): Int {
+        val random = Random(number + 54)
+        return Color.rgb(
+            random.nextInt(200, 250),
+            random.nextInt(200, 250),
+            random.nextInt(200, 250)
+        )
     }
 }
