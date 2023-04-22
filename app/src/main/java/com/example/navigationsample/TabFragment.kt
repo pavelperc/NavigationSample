@@ -6,14 +6,18 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 
-class TabFragment: Fragment(R.layout.fragment_tab) {
+class TabFragment : Fragment(R.layout.fragment_tab) {
     companion object {
-        const val TAG = "TabFragment"
+        const val EXTRA_TAG = "start_navigation_tag"
+        const val EXTRA_CLASS = "start_navigation_class"
 
-        const val EXTRA_START_NAVIGATION = "start_navigation"
-
-        fun newInstance(startNavigation: String): TabFragment {
-            return TabFragment().apply { arguments = bundleOf(EXTRA_START_NAVIGATION to startNavigation) }
+        fun newInstance(clazz: Class<*>, tag: String): TabFragment {
+            return TabFragment().apply {
+                arguments = bundleOf(
+                    EXTRA_CLASS to clazz,
+                    EXTRA_TAG to tag,
+                )
+            }
         }
     }
 
@@ -21,17 +25,12 @@ class TabFragment: Fragment(R.layout.fragment_tab) {
         super.onViewCreated(view, savedInstanceState)
 
         if (childFragmentManager.backStackEntryCount == 0) {
-            val startNavigation = arguments?.getString(EXTRA_START_NAVIGATION)
+            val clazz = arguments?.getSerializable(EXTRA_CLASS) as Class<out Fragment>
+            val tag = arguments?.getString(EXTRA_TAG)!!
 
-            val fragment = when (startNavigation) {
-                MyBooksFragment.TAG -> MyBooksFragment()
-                ShowcaseFragment.TAG -> ShowcaseFragment()
-                ProfileFragment.TAG -> ProfileFragment()
-                else -> error("unknown start navigation $startNavigation")
-            }
             childFragmentManager.commit {
-                replace(R.id.tabContainer, fragment, startNavigation)
-                addToBackStack(startNavigation)
+                replace(R.id.tabContainer, clazz, null, tag)
+                addToBackStack(tag)
             }
         }
     }

@@ -58,9 +58,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun createTabFragment(position: Int): TabFragment {
         return when (position) {
-            0 -> TabFragment.newInstance(MyBooksFragment.TAG)
-            1 -> TabFragment.newInstance(ShowcaseFragment.TAG)
-            2 -> TabFragment.newInstance(ProfileFragment.TAG)
+            0 -> TabFragment.newInstance(MyBooksFragment::class.java, MyBooksFragment.TAG)
+            1 -> TabFragment.newInstance(ShowcaseFragment::class.java, ShowcaseFragment.TAG)
+            2 -> TabFragment.newInstance(ProfileFragment::class.java, ProfileFragment.TAG)
             else -> error("unknown position $position")
         }
     }
