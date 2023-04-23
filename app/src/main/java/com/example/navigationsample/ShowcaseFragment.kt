@@ -15,6 +15,7 @@ class ShowcaseFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
+                setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
                 add(R.id.tabContainer, BookFragment.newInstance(1))
                 addToBackStack(BookFragment.TAG)
             }
