@@ -3,11 +3,16 @@ package com.example.navigationsample
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.fragment_book.buttonOpenBook
 import kotlinx.android.synthetic.main.fragment_book.rootLayout
 import kotlinx.android.synthetic.main.fragment_book.textViewTitle
+import kotlinx.android.synthetic.main.fragment_book.toolbar
 import kotlin.random.Random
 
 class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
@@ -23,9 +28,14 @@ class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        fitToolbarInInsets()
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
         textViewTitle.text = "Книга $number"
-        rootLayout.setBackgroundColor(generateColor(number))
+        val color = generateColor(number)
+        val colorLight = ColorUtils.blendARGB(color, Color.WHITE, 0.5f)
+        rootLayout.setBackgroundColor(colorLight)
+        toolbar.setBackgroundColor(color)
         buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
                 add(R.id.tabContainer, BookFragment.newInstance(number + 1))
@@ -34,12 +44,24 @@ class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
         }
     }
 
+    private fun fitToolbarInInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            toolbar.updatePadding(
+                top = insets.top,
+                left = insets.left,
+                right = insets.right
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
     private fun generateColor(number: Int): Int {
-        val random = Random(number + 54)
+        val random = Random(number + 1)
         return Color.rgb(
-            random.nextInt(200, 250),
-            random.nextInt(200, 250),
-            random.nextInt(200, 250)
+            random.nextInt(180, 240),
+            random.nextInt(180, 240),
+            random.nextInt(180, 240)
         )
     }
 }
