@@ -5,15 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.navigationsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private val repeatedStackPositions = mutableSetOf<Int>()
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.isAppearanceLightStatusBars = true
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             repeatedStackPositions += it
         }
 
-        bottomNavigationView.setOnItemSelectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_my_books -> openTab(0)
                 R.id.item_showcase -> openTab(1)
@@ -90,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectTabIcon(position: Int) {
-        bottomNavigationView.menu.getItem(position).isChecked = true
+        binding.bottomNavigationView.menu.getItem(position).isChecked = true
     }
 
     private fun getCurrentTabFragment() =

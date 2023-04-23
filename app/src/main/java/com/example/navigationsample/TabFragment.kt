@@ -5,8 +5,9 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.navigationsample.databinding.FragmentTabBinding
 
-class TabFragment : Fragment(R.layout.fragment_tab) {
+class TabFragment : BaseFragment() {
     companion object {
         const val EXTRA_TAG = "start_navigation_tag"
         const val EXTRA_CLASS = "start_navigation_class"
@@ -20,6 +21,8 @@ class TabFragment : Fragment(R.layout.fragment_tab) {
             }
         }
     }
+
+    private val binding by viewBinding(FragmentTabBinding::inflate)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

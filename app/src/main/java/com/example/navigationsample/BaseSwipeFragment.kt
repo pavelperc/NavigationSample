@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
 import com.example.navigationsample.swipe.model.SliderConfig
 import com.example.navigationsample.swipe.model.SliderInterface
 import com.example.navigationsample.swipe.model.SliderListener
 import com.example.navigationsample.swipe.slider.SliderPanel
 
-open class BaseSwipeFragment(@LayoutRes layout: Int) : Fragment(layout), SliderListener {
+open class BaseSwipeFragment : BaseFragment(), SliderListener {
 
     private var rootFrameLayout: FrameLayout? = null
     private var contentView: View? = null

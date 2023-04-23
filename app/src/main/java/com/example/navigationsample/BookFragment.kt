@@ -9,13 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
-import kotlinx.android.synthetic.main.fragment_book.buttonOpenBook
-import kotlinx.android.synthetic.main.fragment_book.rootLayout
-import kotlinx.android.synthetic.main.fragment_book.textViewTitle
-import kotlinx.android.synthetic.main.fragment_book.toolbar
+import com.example.navigationsample.databinding.FragmentBookBinding
 import kotlin.random.Random
 
-class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
+class BookFragment : BaseSwipeFragment() {
     companion object {
         const val TAG = "BookFragment"
 
@@ -26,17 +23,19 @@ class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
         }
     }
 
+    private val binding by viewBinding(FragmentBookBinding::inflate)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         fitToolbarInInsets()
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
-        textViewTitle.text = "Книга $number"
+        binding.textViewTitle.text = "Книга $number"
         val color = generateColor(number)
         val colorLight = ColorUtils.blendARGB(color, Color.WHITE, 0.5f)
-        rootLayout.setBackgroundColor(colorLight)
-        toolbar.setBackgroundColor(color)
-        buttonOpenBook.setOnClickListener {
+        binding.rootLayout.setBackgroundColor(colorLight)
+        binding.toolbar.setBackgroundColor(color)
+        binding.buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
                 add(R.id.tabContainer, BookFragment.newInstance(number + 1))
                 addToBackStack(BookFragment.TAG)
@@ -45,9 +44,9 @@ class BookFragment : BaseSwipeFragment(R.layout.fragment_book) {
     }
 
     private fun fitToolbarInInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            toolbar.updatePadding(
+            binding.toolbar.updatePadding(
                 top = insets.top,
                 left = insets.left,
                 right = insets.right

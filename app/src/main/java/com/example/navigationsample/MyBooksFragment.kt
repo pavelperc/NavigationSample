@@ -2,17 +2,18 @@ package com.example.navigationsample
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import kotlinx.android.synthetic.main.fragment_my_books.*
+import com.example.navigationsample.databinding.FragmentMyBooksBinding
 
-class MyBooksFragment: Fragment(R.layout.fragment_my_books) {
+class MyBooksFragment: BaseFragment() {
     companion object {
         const val TAG = "MyBooksFragment"
     }
 
+    private val binding by viewBinding(FragmentMyBooksBinding::inflate)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        buttonOpenBook.setOnClickListener {
+        binding.buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
                 add(R.id.tabContainer, BookFragment.newInstance(1))
                 addToBackStack(BookFragment.TAG)

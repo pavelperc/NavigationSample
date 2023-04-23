@@ -1,8 +1,11 @@
 package com.example.navigationsample
 
-import androidx.fragment.app.Fragment
+import com.example.navigationsample.databinding.FragmentProfileBinding
 
-class ProfileFragment: Fragment(R.layout.fragment_profile) {
+class ProfileFragment : BaseFragment() {
+
+    private val binding by viewBinding(FragmentProfileBinding::inflate)
+
     companion object {
         const val TAG = "ProfileFragment"
     }
