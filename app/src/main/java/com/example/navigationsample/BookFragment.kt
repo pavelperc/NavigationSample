@@ -1,5 +1,6 @@
 package com.example.navigationsample
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -7,8 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
-import androidx.transition.TransitionInflater
+import androidx.transition.AutoTransition
 import com.example.navigationsample.databinding.FragmentBookBinding
+import com.example.navigationsample.utils.darkerColor
 import com.example.navigationsample.utils.generateColor
 import com.example.navigationsample.utils.lighterColor
 
@@ -27,21 +29,22 @@ class BookFragment : BaseSwipeFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionInflater.from(requireContext())
-            .inflateTransition(R.transition.shared_image)
+        sharedElementEnterTransition = AutoTransition()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(binding.imageViewBook, SHARED_VIEW_TRANSITION_NAME)
+        binding.imageViewBook.transitionName = SHARED_VIEW_TRANSITION_NAME
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         fitToolbarInInsets()
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
         binding.textViewTitle.text = "Книга $number"
         val color = generateColor(number)
         val colorLight = lighterColor(color)
+        val colorDark = darkerColor(color)
         binding.rootLayout.setBackgroundColor(colorLight)
         binding.toolbar.setBackgroundColor(color)
+        binding.imageViewBook.imageTintList = ColorStateList.valueOf(colorDark)
         binding.buttonOpenBook.setOnClickListener {
             parentFragmentManager.commit {
                 setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)

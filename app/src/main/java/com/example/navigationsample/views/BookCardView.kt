@@ -26,8 +26,6 @@ class BookCardView @JvmOverloads constructor(
         orientation = VERTICAL
         gravity = Gravity.CENTER
         setPadding(16.dp)
-
-        setBackgroundResource(context.getThemeAttr(android.R.attr.selectableItemBackground))
     }
 
     fun bind(text: String, color: Int = Color.BLACK) {
