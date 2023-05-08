@@ -13,6 +13,10 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    companion object {
+        private const val INITIAL_TAB = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -22,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         windowInsetsController.isAppearanceLightStatusBars = true
 
         if (savedInstanceState == null) { // handle screen rotation
-            openTab(0)
+            openTab(INITIAL_TAB)
+            selectTabIcon(INITIAL_TAB)
         }
 
         savedInstanceState?.getIntegerArrayList("repeatedStackPositions")?.let {

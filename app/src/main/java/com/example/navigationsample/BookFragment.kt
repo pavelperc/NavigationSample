@@ -9,8 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
+import androidx.transition.TransitionInflater
 import com.example.navigationsample.databinding.FragmentBookBinding
-import kotlin.random.Random
+import com.example.navigationsample.utils.generateColor
+import com.example.navigationsample.utils.lighterColor
 
 class BookFragment : BaseSwipeFragment() {
     companion object {
@@ -25,6 +27,12 @@ class BookFragment : BaseSwipeFragment() {
 
     private val binding by viewBinding(FragmentBookBinding::inflate)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = TransitionInflater.from(requireContext())
+            .inflateTransition(R.transition.shared_image)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -32,7 +40,7 @@ class BookFragment : BaseSwipeFragment() {
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
         binding.textViewTitle.text = "Книга $number"
         val color = generateColor(number)
-        val colorLight = ColorUtils.blendARGB(color, Color.WHITE, 0.5f)
+        val colorLight = lighterColor(color)
         binding.rootLayout.setBackgroundColor(colorLight)
         binding.toolbar.setBackgroundColor(color)
         binding.buttonOpenBook.setOnClickListener {
@@ -54,14 +62,5 @@ class BookFragment : BaseSwipeFragment() {
             )
             WindowInsetsCompat.CONSUMED
         }
-    }
-
-    private fun generateColor(number: Int): Int {
-        val random = Random(number + 1)
-        return Color.rgb(
-            random.nextInt(180, 240),
-            random.nextInt(180, 240),
-            random.nextInt(180, 240)
-        )
     }
 }

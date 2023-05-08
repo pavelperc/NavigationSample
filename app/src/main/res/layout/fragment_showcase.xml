@@ -13,10 +13,30 @@
         android:text="Витрина"
         android:textSize="30sp" />
 
-    <Button
-        android:id="@+id/buttonOpenBook"
+    <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="открыть книгу" />
+        android:columnCount="2">
+
+        <com.example.navigationsample.views.BookCardView
+            android:id="@+id/bookView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.example.navigationsample.views.BookCardView
+            android:id="@+id/bookView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.example.navigationsample.views.BookCardView
+            android:id="@+id/bookView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.example.navigationsample.views.BookCardView
+            android:id="@+id/bookView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </GridLayout>
 
 </LinearLayout>
