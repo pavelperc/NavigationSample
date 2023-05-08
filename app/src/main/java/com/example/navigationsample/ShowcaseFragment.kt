@@ -27,12 +27,9 @@ class ShowcaseFragment: BaseFragment() {
     }
 
     private fun openBook(number: Int, imageView: ImageView) {
-        imageView.transitionName = BookFragment.SHARED_VIEW_TRANSITION_NAME
         parentFragmentManager.commit {
             setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
-//            add(R.id.tabContainer, BookFragment.newInstance(number))
-            replace(R.id.tabContainer, BookFragment.newInstance(number))
-            addSharedElement(imageView, BookFragment.SHARED_VIEW_TRANSITION_NAME)
+            add(R.id.tabContainer, BookFragment.newInstance(number, imageView))
             addToBackStack(BookFragment.TAG)
         }
     }
