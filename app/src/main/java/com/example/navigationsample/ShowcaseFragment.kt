@@ -3,6 +3,7 @@ package com.example.navigationsample
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.commit
 import com.example.navigationsample.databinding.FragmentShowcaseBinding
 import com.example.navigationsample.utils.generateDarkColor
@@ -28,11 +29,12 @@ class ShowcaseFragment: BaseFragment() {
     }
 
     private fun openBook(number: Int, imageView: ImageView) {
+        ViewCompat.setTransitionName(imageView, BookFragment.SHARED_VIEW_TRANSITION_NAME)
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-//            setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
-            addSharedElement(imageView, imageView.transitionName)
-            postponeEnterTransition(100, TimeUnit.MILLISECONDS)
+            setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
+            addSharedElement(imageView, BookFragment.SHARED_VIEW_TRANSITION_NAME)
+//            postponeEnterTransition(100, TimeUnit.MILLISECONDS)
             add(R.id.tabContainer, BookFragment.newInstance(number))
             addToBackStack(BookFragment.TAG)
         }

@@ -1,9 +1,7 @@
 package com.example.navigationsample
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.core.graphics.ColorUtils
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -17,8 +15,8 @@ import com.example.navigationsample.utils.lighterColor
 class BookFragment : BaseSwipeFragment() {
     companion object {
         const val TAG = "BookFragment"
-
         const val EXTRA_NUMBER = "number"
+        const val SHARED_VIEW_TRANSITION_NAME = "book"
 
         fun newInstance(number: Int): BookFragment {
             return BookFragment().apply { arguments = bundleOf(EXTRA_NUMBER to number) }
@@ -35,6 +33,7 @@ class BookFragment : BaseSwipeFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(binding.imageViewBook, SHARED_VIEW_TRANSITION_NAME)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         fitToolbarInInsets()
         val number = arguments?.getInt(EXTRA_NUMBER) ?: error("no number")
