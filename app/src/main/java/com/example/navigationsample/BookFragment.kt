@@ -22,7 +22,6 @@ class BookFragment : BaseSwipeFragment() {
     companion object {
         const val TAG = "BookFragment"
         const val EXTRA_NUMBER = "number"
-        const val EXTRA_SHARED_VIEW_PARAMS = "shared_view_params"
 
         data class SharedViewParams(
             val x: Int,
@@ -33,10 +32,8 @@ class BookFragment : BaseSwipeFragment() {
 
         fun newInstance(number: Int, imageView: ImageView? = null): BookFragment {
             return BookFragment().apply {
-                arguments = bundleOf(
-                    EXTRA_NUMBER to number,
-                    EXTRA_SHARED_VIEW_PARAMS to imageView?.let { getSharedViewParams(it) }
-                )
+                arguments = bundleOf(EXTRA_NUMBER to number)
+                sharedViewParams = imageView?.let { getSharedViewParams(it) }
             }
         }
 
@@ -51,6 +48,8 @@ class BookFragment : BaseSwipeFragment() {
             )
         }
     }
+
+    var sharedViewParams: SharedViewParams? = null
 
     private val binding by viewBinding(FragmentBookBinding::inflate)
 
@@ -73,13 +72,12 @@ class BookFragment : BaseSwipeFragment() {
                 addToBackStack(BookFragment.TAG)
             }
         }
-        startSharedViewAnimation()
+        startSharedViewAnimation(binding.imageViewBook)
     }
 
-    private fun startSharedViewAnimation() {
-        val params = arguments
-            ?.getSerializable(EXTRA_SHARED_VIEW_PARAMS) as? SharedViewParams ?: return
-        val view = binding.imageViewBook
+    private fun startSharedViewAnimation(view: View) {
+        val params = sharedViewParams ?: return
+        sharedViewParams = null
 
         view.visibility = View.INVISIBLE
         view.post {
