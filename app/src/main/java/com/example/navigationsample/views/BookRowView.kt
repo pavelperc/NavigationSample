@@ -19,7 +19,7 @@ class BookRowView @JvmOverloads constructor(
 
     private val binding = ViewBookRowBinding.inflate(LayoutInflater.from(context), this)
 
-    var rowPosition = 0
+    var initialPosition = 0
         set(value) {
             field = value
             binding.recyclerView.adapter?.notifyDataSetChanged()
@@ -47,7 +47,7 @@ class BookRowView @JvmOverloads constructor(
                 override fun getItemCount() = 10
 
                 override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                    val number = rowPosition * itemCount + position + 1
+                    val number = initialPosition + position
                     (holder.itemView as BookCardView).bind(number)
                     holder.itemView.setOnClickListener {
                         onBookClick?.invoke(number, holder.itemView)

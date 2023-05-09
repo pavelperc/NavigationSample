@@ -41,14 +41,21 @@ class BookFragment : BaseSwipeFragment() {
         binding.rootLayout.setBackgroundColor(colorLight)
         binding.toolbar.setBackgroundColor(color)
         binding.imageViewBook.imageTintList = ColorStateList.valueOf(colorDark)
-        binding.buttonOpenBook.setOnClickListener {
-            parentFragmentManager.commit {
-                setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
-                add(R.id.tabContainer, BookFragment.newInstance(number + 1))
-                addToBackStack(BookFragment.TAG)
-            }
+
+        binding.bookRowView.apply {
+            initialPosition = number + 1
+            setTitleText("Похожие книги")
+            onBookClick = ::openBook
         }
         startSharedViewAnimation(binding.layoutBookWithText)
+    }
+
+    private fun openBook(number: Int, sharedView: View?) {
+        parentFragmentManager.commit {
+            setCustomAnimations(R.anim.slide_in, 0, 0, R.anim.slide_out)
+            add(R.id.tabContainer, BookFragment.newInstance(number, sharedView))
+            addToBackStack(BookFragment.TAG)
+        }
     }
 
     private fun fitToolbarInInsets() {

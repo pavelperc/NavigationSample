@@ -29,7 +29,7 @@ class ShowcaseFragment : BaseFragment() {
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 (holder.itemView as BookRowView).apply {
                     setTitleText("Секция ${position + 1}")
-                    rowPosition = position
+                    initialPosition = position * 10 + 1
                     onBookClick = ::openBook
                 }
             }

@@ -18,34 +18,65 @@
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="Книга" />
 
-    <LinearLayout
-        android:id="@+id/layoutBookWithText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageViewBook"
-            android:layout_width="180dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_book" />
-
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Книга"
-            android:textSize="30sp" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/buttonOpenBook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="открыть ещё книгу" />
+            <LinearLayout
+                android:id="@+id/layoutBookWithText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/imageViewBook"
+                    android:layout_width="180dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/ic_book" />
+
+                <TextView
+                    android:id="@+id/textViewTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Книга"
+                    android:textSize="30sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="8dp"
+                android:gravity="center_vertical"
+                android:layout_margin="16dp"
+                android:background="#08000000"
+                android:text="Описание"
+                android:textSize="26sp" />
+
+            <com.example.navigationsample.views.BookRowView
+                android:id="@+id/bookRowView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="16dp"
+                android:background="#08000000"
+                android:gravity="center"
+                android:text="Отзывы"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
