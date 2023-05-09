@@ -17,10 +17,12 @@ fun Context.getThemeAttr(@AttrRes attr: Int) =
 
 fun generateColor(number: Int): Int {
     val random = Random(number + 1)
-    return Color.rgb(
-        random.nextInt(180, 240),
-        random.nextInt(180, 240),
-        random.nextInt(180, 240)
+    return ColorUtils.HSLToColor(
+        floatArrayOf(
+            random.nextInt(360).toFloat(),
+            0.4f,
+            0.88f
+        )
     )
 }
 
