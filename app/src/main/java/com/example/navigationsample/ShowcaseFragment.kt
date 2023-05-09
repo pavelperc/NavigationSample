@@ -2,12 +2,16 @@ package com.example.navigationsample
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.commit
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.navigationsample.base.BaseFragment
 import com.example.navigationsample.databinding.FragmentShowcaseBinding
-import com.example.navigationsample.utils.generateDarkColor
+import com.example.navigationsample.views.BookRowView
 
-class ShowcaseFragment: BaseFragment() {
+class ShowcaseFragment : BaseFragment() {
     companion object {
         const val TAG = "ShowcaseFragment"
     }
@@ -15,15 +19,21 @@ class ShowcaseFragment: BaseFragment() {
     private val binding by viewBinding(FragmentShowcaseBinding::inflate)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.bookView1.bind("Книга 1", generateDarkColor(1))
-        binding.bookView2.bind("Книга 2", generateDarkColor(2))
-        binding.bookView3.bind("Книга 3", generateDarkColor(3))
-        binding.bookView4.bind("Книга 4", generateDarkColor(4))
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                object : ViewHolder(BookRowView(parent.context)) {}
 
-        binding.bookView1.setOnClickListener { openBook(1, binding.bookView1) }
-        binding.bookView2.setOnClickListener { openBook(2, binding.bookView2) }
-        binding.bookView3.setOnClickListener { openBook(3, binding.bookView3) }
-        binding.bookView4.setOnClickListener { openBook(4, binding.bookView4) }
+            override fun getItemCount() = 5
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                (holder.itemView as BookRowView).apply {
+                    setTitleText("Секция ${position + 1}")
+                    rowPosition = position
+                    onBookClick = ::openBook
+                }
+            }
+        }
     }
 
     private fun openBook(number: Int, sharedView: View) {

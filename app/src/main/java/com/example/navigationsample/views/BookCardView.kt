@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.view.setPadding
 import com.example.navigationsample.databinding.ViewBookCardBinding
 import com.example.navigationsample.utils.dp
+import com.example.navigationsample.utils.generateDarkColor
 
 class BookCardView @JvmOverloads constructor(
     context: Context,
@@ -25,6 +26,10 @@ class BookCardView @JvmOverloads constructor(
         orientation = VERTICAL
         gravity = Gravity.CENTER
         setPadding(16.dp)
+    }
+
+    fun bind(position: Int) {
+        bind("Книга $position", generateDarkColor(position))
     }
 
     fun bind(text: String, color: Int = Color.BLACK) {

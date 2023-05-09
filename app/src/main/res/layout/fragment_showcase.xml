@@ -3,40 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".ProfileFragment">
 
     <TextView
+        android:layout_margin="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Витрина"
         android:textSize="30sp" />
 
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
-
-        <com.example.navigationsample.views.BookCardView
-            android:id="@+id/bookView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.example.navigationsample.views.BookCardView
-            android:id="@+id/bookView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.example.navigationsample.views.BookCardView
-            android:id="@+id/bookView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.example.navigationsample.views.BookCardView
-            android:id="@+id/bookView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </GridLayout>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
