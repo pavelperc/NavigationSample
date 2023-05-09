@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import androidx.core.view.setPadding
 import com.example.navigationsample.databinding.ViewBookCardBinding
 import com.example.navigationsample.utils.dp
-import com.example.navigationsample.utils.getThemeAttr
 
 class BookCardView @JvmOverloads constructor(
     context: Context,

@@ -30,10 +30,10 @@ class BookFragment : BaseSwipeFragment() {
             val height: Int
         ) : Serializable
 
-        fun newInstance(number: Int, imageView: ImageView? = null): BookFragment {
+        fun newInstance(number: Int, sharedView: View? = null): BookFragment {
             return BookFragment().apply {
                 arguments = bundleOf(EXTRA_NUMBER to number)
-                sharedViewParams = imageView?.let { getSharedViewParams(it) }
+                sharedViewParams = sharedView?.let { getSharedViewParams(it) }
             }
         }
 
@@ -72,7 +72,7 @@ class BookFragment : BaseSwipeFragment() {
                 addToBackStack(BookFragment.TAG)
             }
         }
-        startSharedViewAnimation(binding.imageViewBook)
+        startSharedViewAnimation(binding.layoutBookWithText)
     }
 
     private fun startSharedViewAnimation(view: View) {
@@ -86,24 +86,27 @@ class BookFragment : BaseSwipeFragment() {
             view.draw(canvas)
             val tempView = ImageView(view.context)
             tempView.setImageBitmap(bitmap)
-            requireActivity().addContentView(tempView, ViewGroup.LayoutParams(params.width, params.height))
-
-            tempView.translationX = params.x.toFloat()
-            tempView.translationY = params.y.toFloat()
+            requireActivity().addContentView(tempView, ViewGroup.LayoutParams(view.width, view.height))
 
             val loc = intArrayOf(0, 0)
             view.getLocationOnScreen(loc)
-
             val scaleX = view.width / params.width.toFloat()
             val scaleY = view.height / params.height.toFloat()
+
+            tempView.translationX = params.x.toFloat()
+            tempView.translationY = params.y.toFloat()
+            tempView.scaleX = 1 / scaleX
+            tempView.scaleY = 1 / scaleY
+
+
             tempView.pivotX = 0f
             tempView.pivotY = 0f
 
             tempView.animate()
                 .translationX(loc[0].toFloat())
                 .translationY(loc[1].toFloat())
-                .scaleX(scaleX)
-                .scaleY(scaleY)
+                .scaleX(1f)
+                .scaleY(1f)
                 .setDuration(200)
                 .withEndAction {
                     (tempView.parent as ViewGroup).removeView(tempView)
