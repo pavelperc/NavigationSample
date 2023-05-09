@@ -1,5 +1,6 @@
 package com.example.navigationsample
 
+import com.example.navigationsample.base.BaseFragment
 import com.example.navigationsample.databinding.FragmentProfileBinding
 
 class ProfileFragment : BaseFragment() {

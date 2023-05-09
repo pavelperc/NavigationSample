@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.navigationsample.base.BaseFragment
 import com.example.navigationsample.databinding.FragmentTabBinding
 
 class TabFragment : BaseFragment() {

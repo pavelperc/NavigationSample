@@ -2,8 +2,8 @@ package com.example.navigationsample
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.fragment.app.commit
+import com.example.navigationsample.base.BaseFragment
 import com.example.navigationsample.databinding.FragmentShowcaseBinding
 import com.example.navigationsample.utils.generateDarkColor
 
