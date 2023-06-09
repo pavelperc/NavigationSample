@@ -3,7 +3,6 @@ package com.example.navigationsample.swipe
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -18,9 +17,8 @@ import kotlin.math.max
 
 class SwipeView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+    private val isVertical: Boolean = true
+) : FrameLayout(context) {
 
     companion object {
         private val VELOCITY_THRESHOLD = 400.dp.toFloat()
@@ -33,14 +31,27 @@ class SwipeView @JvmOverloads constructor(
 
     var onSwipeComplete: (() -> Unit)? = null
 
+    private val maxOffset get() = if (isVertical) height else width
+    private val maxHeight get() = if (isVertical) height else 0
+    private val maxWidth get() = if (isVertical) 0 else width
+    private val View.offset get() = if (isVertical) y else x
+
     private val dragHelperCallback = object : ViewDragHelper.Callback() {
         override fun tryCaptureView(child: View, pointerId: Int) = child === view
-        override fun getViewHorizontalDragRange(child: View) = width
-        override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int) = max(left, 0)
+        override fun getViewHorizontalDragRange(child: View) = maxWidth
+        override fun getViewVerticalDragRange(child: View) = maxHeight
+        override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
+            return if (isVertical) 0 else max(left, 0)
+        }
+        override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
+            return if (isVertical) max(top, 0) else 0
+        }
 
         override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
-            if (xvel > VELOCITY_THRESHOLD || releasedChild.x > width * DISTANCE_THRESHOLD) {
-                dragHelper.settleCapturedViewAt(width, 0)
+            val vel = if (isVertical) yvel else xvel
+
+            if (vel > VELOCITY_THRESHOLD || releasedChild.offset > maxOffset * DISTANCE_THRESHOLD) {
+                dragHelper.settleCapturedViewAt(maxWidth, maxHeight)
             } else {
                 dragHelper.settleCapturedViewAt(0, 0)
             }
@@ -50,14 +61,15 @@ class SwipeView @JvmOverloads constructor(
         override fun onViewPositionChanged(
             changedView: View, left: Int, top: Int, dx: Int, dy: Int
         ) {
-            if (width <= 0) return
-            val scrimAlpha = ((width - left) / width.toFloat()) * 255 * START_SCRIM_ALPHA
+            if (maxOffset <= 0) return
+            val offset = if (isVertical) top else left
+            val scrimAlpha = ((maxOffset - offset) / maxOffset.toFloat()) * 255 * START_SCRIM_ALPHA
             val scrimColor = ColorUtils.setAlphaComponent(Color.BLACK, scrimAlpha.toInt())
             setBackgroundColor(scrimColor)
         }
 
         override fun onViewDragStateChanged(state: Int) {
-            if (state == ViewDragHelper.STATE_IDLE && view.x != 0f) {
+            if (state == ViewDragHelper.STATE_IDLE && view.offset != 0f) {
                 onSwipeComplete?.invoke()
             }
         }
@@ -75,13 +87,17 @@ class SwipeView @JvmOverloads constructor(
     private var dy = 0f
 
     fun reset() {
-        view.offsetLeftAndRight(-view.left)
+        if (isVertical) {
+            view.offsetTopAndBottom(-view.top)
+        } else {
+            view.offsetLeftAndRight(-view.left)
+        }
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (dragHelper.viewDragState == ViewDragHelper.STATE_IDLE && view.x != 0f) {
+        if (dragHelper.viewDragState == ViewDragHelper.STATE_IDLE && view.offset != 0f) {
             return false
         }
         dragHelper.processTouchEvent(event)
@@ -103,7 +119,7 @@ class SwipeView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_MOVE -> {
-                val canScroll = canScroll(view, false, dx.toInt(), ev.x.toInt(), ev.y.toInt())
+                val canScroll = canScroll(view, false, dx.toInt(), dy.toInt(), ev.x.toInt(), ev.y.toInt())
                 val isRightDirection = isRightDirection()
                 Log.d(
                     TAG, "canScroll $canScroll, isRightDirection $isRightDirection, " +
@@ -121,7 +137,11 @@ class SwipeView @JvmOverloads constructor(
     }
 
     private fun isRightDirection(): Boolean {
-        return dx > 0 && abs(dx) > abs(dy) * 3
+        return if (isVertical) {
+            dy > 0 && abs(dy) > abs(dx) * 3
+        } else {
+            dx > 0 && abs(dx) > abs(dy) * 3
+        }
     }
 
 
@@ -133,11 +153,12 @@ class SwipeView @JvmOverloads constructor(
      * @param checkV Whether the view v passed should itself be checked for scrollability (true),
      *               or just its children (false).
      * @param dx Delta scrolled in pixels
+     * @param dy Delta scrolled in pixels
      * @param x X coordinate of the active touch point
      * @param y Y coordinate of the active touch point
      * @return true if child views of v can be scrolled by delta of dx.
      */
-    private fun canScroll(v: View, checkV: Boolean, dx: Int, x: Int, y: Int): Boolean {
+    private fun canScroll(v: View, checkV: Boolean, dx: Int, dy: Int, x: Int, y: Int): Boolean {
         if (v is ViewGroup) {
             val group = v
             val scrollX = v.getScrollX() // maybe problems here
@@ -151,12 +172,16 @@ class SwipeView @JvmOverloads constructor(
                     x + scrollX < child.right &&
                     y + scrollY >= child.top &&
                     y + scrollY < child.bottom &&
-                    canScroll(child, true, dx, x + scrollX - child.left, y + scrollY - child.top)
+                    canScroll(child, true, dx, dy, x + scrollX - child.left, y + scrollY - child.top)
                 ) {
                     return true
                 }
             }
         }
-        return checkV && v.canScrollHorizontally(-dx)
+        return if (isVertical) {
+            checkV && v.canScrollVertically(-dy)
+        } else {
+            checkV && v.canScrollHorizontally(-dx)
+        }
     }
 }
