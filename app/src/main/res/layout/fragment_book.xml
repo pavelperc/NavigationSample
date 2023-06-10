@@ -54,6 +54,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewDescription"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="8dp"

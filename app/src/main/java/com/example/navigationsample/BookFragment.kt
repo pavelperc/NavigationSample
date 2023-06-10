@@ -8,11 +8,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.navigationsample.base.BaseSwipeFragment
 import com.example.navigationsample.databinding.FragmentBookBinding
 import com.example.navigationsample.utils.darkerColor
 import com.example.navigationsample.utils.generateColor
 import com.example.navigationsample.utils.lighterColor
+import kotlinx.coroutines.delay
 
 class BookFragment : BaseSwipeFragment() {
     companion object {
@@ -48,6 +50,13 @@ class BookFragment : BaseSwipeFragment() {
             onBookClick = ::openBook
         }
         startSharedViewAnimation(binding.layoutBookWithText)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            var x = 0
+            while (true) {
+                binding.textViewDescription.text = "Описание ${x++}"
+                delay(500)
+            }
+        }
     }
 
     private fun openBook(number: Int, sharedView: View?) {

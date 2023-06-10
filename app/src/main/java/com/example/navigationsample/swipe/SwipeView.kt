@@ -17,7 +17,7 @@ import kotlin.math.max
 
 class SwipeView @JvmOverloads constructor(
     context: Context,
-    private val isVertical: Boolean = true
+    private val isVertical: Boolean = false
 ) : FrameLayout(context) {
 
     companion object {
